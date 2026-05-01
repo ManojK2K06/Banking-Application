@@ -47,7 +47,9 @@ public class AuditService {
              PreparedStatement ps = conn.prepareStatement(
                  "INSERT INTO audit_log (user_id, action, entity_type, entity_id, old_value, new_value, " +
                  "session_id, status, details) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            ps.setInt(1, userId);
+            // Use NULL for system/pre-login actions to avoid FK violation
+            if (userId > 0) ps.setInt(1, userId);
+            else            ps.setNull(1, java.sql.Types.INTEGER);
             ps.setString(2, action);
             ps.setString(3, entityType);
             ps.setString(4, entityId);

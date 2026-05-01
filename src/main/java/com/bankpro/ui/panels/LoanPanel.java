@@ -24,7 +24,7 @@ public class LoanPanel extends JPanel {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
         buildUI();
-        loadLoans("ALL");
+        javax.swing.SwingUtilities.invokeLater(() -> loadLoans("ALL"));
     }
 
     private void buildUI() {

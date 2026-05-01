@@ -19,7 +19,8 @@ public class DashboardPanel extends JPanel {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
         buildUI();
-        refreshData();
+        // Defer data load until after the frame is fully rendered
+        javax.swing.SwingUtilities.invokeLater(this::refreshData);
     }
 
     private void buildUI() {

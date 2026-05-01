@@ -24,7 +24,7 @@ public class AccountPanel extends JPanel {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
         buildUI();
-        loadAccounts();
+        javax.swing.SwingUtilities.invokeLater(this::loadAccounts);
     }
 
     private void buildUI() {

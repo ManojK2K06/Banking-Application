@@ -30,7 +30,7 @@ class FixedDepositPanelImpl extends JPanel {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
         buildUI();
-        loadFDs();
+        javax.swing.SwingUtilities.invokeLater(this::loadFDs);
     }
 
     private void buildUI() {
@@ -229,7 +229,8 @@ class CardsPanelImpl extends JPanel {
     CardsPanelImpl() {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
-        buildUI(); loadCards();
+        buildUI();
+        javax.swing.SwingUtilities.invokeLater(this::loadCards);
     }
 
     private void buildUI() {
@@ -543,7 +544,8 @@ class AuditLogPanelImpl extends JPanel {
     AuditLogPanelImpl() {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
-        buildUI(); load();
+        buildUI();
+        javax.swing.SwingUtilities.invokeLater(this::load);
     }
 
     private void buildUI() {
@@ -605,7 +607,8 @@ class UserManagementPanelImpl extends JPanel {
     UserManagementPanelImpl() {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
-        buildUI(); loadUsers();
+        buildUI();
+        javax.swing.SwingUtilities.invokeLater(this::loadUsers);
     }
 
     private void buildUI() {

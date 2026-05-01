@@ -37,9 +37,12 @@ public class MainFrame extends JFrame {
         root.setBackground(Theme.BG_DARK);
         setContentPane(root);
 
+        // buildContent() MUST run first — it initialises cardLayout/contentPanel
+        // which buildSidebar() depends on via setActivePage()
+        JPanel content = buildContent();
         root.add(buildTopBar(), BorderLayout.NORTH);
         root.add(buildSidebar(), BorderLayout.WEST);
-        root.add(buildContent(), BorderLayout.CENTER);
+        root.add(content, BorderLayout.CENTER);
     }
 
     private JPanel buildTopBar() {

@@ -230,7 +230,7 @@ public class DatabaseManager {
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS audit_log (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
+                    user_id INTEGER,
                     action TEXT NOT NULL,
                     entity_type TEXT,
                     entity_id TEXT,
@@ -291,7 +291,7 @@ public class DatabaseManager {
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS sessions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
+                    user_id INTEGER,
                     session_id TEXT UNIQUE NOT NULL,
                     login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     logout_at TIMESTAMP,

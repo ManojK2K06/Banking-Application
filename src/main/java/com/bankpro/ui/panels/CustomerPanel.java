@@ -25,7 +25,7 @@ public class CustomerPanel extends JPanel {
         setBackground(Theme.BG_DARK);
         setLayout(new BorderLayout());
         buildUI();
-        loadCustomers("");
+        javax.swing.SwingUtilities.invokeLater(() -> loadCustomers(""));
     }
 
     private void buildUI() {
