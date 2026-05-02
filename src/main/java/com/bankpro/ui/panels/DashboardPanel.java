@@ -49,7 +49,7 @@ public class DashboardPanel extends JPanel {
         pendingLoansLbl = new JLabel("...");
 
         stats.add(makeStatCard("Total Deposits (AUM)", totalDepositsLbl, Theme.ACCENT_GREEN));
-        stats.add(makeStatCard("Total Customers", totalCustomersLbl, Theme.ACCENT_BLUE));
+        stats.add(makeStatCard("Total Parties", totalCustomersLbl, Theme.ACCENT_BLUE));
         stats.add(makeStatCard("Active Accounts", totalAccountsLbl, Theme.ACCENT_GOLD));
         stats.add(makeStatCard("Loan Outstanding", loanOutstandingLbl, Theme.ACCENT_RED));
         stats.add(makeStatCard("Today's Txn Volume", txnVolumeLbl, Theme.ACCENT_ORANGE));
@@ -184,7 +184,7 @@ public class DashboardPanel extends JPanel {
             @Override
             protected Void doInBackground() throws Exception {
                 deposits = AccountService.getInstance().getTotalDeposits();
-                customers = CustomerService.getInstance().getTotalCustomerCount();
+                customers = PartyService.getInstance().getTotalPartyCount();
                 accounts = AccountService.getInstance().getTotalAccountCount();
                 loans = LoanService.getInstance().getTotalLoanOutstanding();
                 txnVol = TransactionService.getInstance().getTodayTransactionVolume();

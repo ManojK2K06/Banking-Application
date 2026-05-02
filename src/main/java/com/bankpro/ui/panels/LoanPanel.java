@@ -109,7 +109,7 @@ public class LoanPanel extends JPanel {
                     tableModel.setRowCount(0);
                     for (Loan l : currentList) {
                         tableModel.addRow(new Object[]{
-                            l.getLoanId(), l.getCustomerName(), l.getLoanType(),
+                            l.getLoanId(), l.getPartyName() != null ? l.getPartyName() : l.getCustomerName(), l.getLoanType(),
                             BankUtil.formatCurrency(l.getPrincipalAmount()),
                             BankUtil.formatCurrency(l.getOutstandingAmount()),
                             BankUtil.formatCurrency(l.getEmiAmount()),
@@ -206,12 +206,12 @@ public class LoanPanel extends JPanel {
 
         searchBtn.addActionListener(e -> {
             try {
-                List<Customer> res = CustomerService.getInstance().searchCustomers(customerSearch.getText().trim());
+                List<Party> res = PartyService.getInstance().searchParties(customerSearch.getText().trim());
                 if (res.isEmpty()) { customerFound.setText("❌ Not found"); return; }
-                Customer c = res.size() == 1 ? res.get(0) : selectFromList(dlg, res);
+                Party c; if (res.size() == 1) { c = res.get(0); } else { c = selectFromList(dlg, res); } if (c == null) return;
                 if (c == null) return;
                 cId[0] = c.getId();
-                customerFound.setText("✓ " + c.getFullName() + " [" + c.getCustomerId() + "] — Credit: " + c.getCreditScore());
+                customerFound.setText("✓ " + c.getDisplayName() + " [" + c.getPartyId() + "] — Credit: " + c.getCreditScore());
                 customerFound.setForeground(Theme.ACCENT_GREEN);
             } catch (Exception ex) { Theme.showError(dlg, ex.getMessage()); }
         });
@@ -262,8 +262,8 @@ public class LoanPanel extends JPanel {
         } catch (Exception ignored) { label.setText("EMI: —"); }
     }
 
-    private Customer selectFromList(JDialog parent, List<Customer> list) {
-        String[] names = list.stream().map(c -> c.getCustomerId() + " — " + c.getFullName()).toArray(String[]::new);
+    private Party selectFromList(JDialog parent, List<Party> list) {
+        String[] names = list.stream().map(c -> c.getPartyId() + " — " + c.getDisplayName()).toArray(String[]::new);
         String sel = (String) JOptionPane.showInputDialog(parent, "Select:", "Multiple Found",
             JOptionPane.PLAIN_MESSAGE, null, names, names[0]);
         if (sel == null) return null;
@@ -292,7 +292,7 @@ public class LoanPanel extends JPanel {
             "<tr><td><b>Next EMI</b></td><td>%s</td></tr>" +
             "<tr><td><b>Purpose</b></td><td>%s</td></tr>" +
             "</table></html>",
-            l.getLoanId(), l.getCustomerName(), l.getLoanTypeLabel(),
+            l.getLoanId(), l.getPartyName() != null ? l.getPartyName() : l.getCustomerName(), l.getLoanTypeLabel(),
             BankUtil.formatCurrency(l.getPrincipalAmount()),
             BankUtil.formatCurrency(l.getOutstandingAmount()),
             l.getInterestRate(), l.getTenureMonths(),

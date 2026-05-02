@@ -72,8 +72,8 @@ class FixedDepositPanelImpl extends JPanel {
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(
-                "SELECT fd.*, c.first_name||' '||c.last_name AS cname FROM fixed_deposits fd " +
-                "LEFT JOIN customers c ON fd.customer_id=c.id ORDER BY fd.created_at DESC");
+                "SELECT fd.*, COALESCE(c.first_name||' '||c.last_name, c.company_name) AS cname FROM fixed_deposits fd " +
+                "LEFT JOIN customers c ON fd.party_id=c.id ORDER BY fd.created_at DESC");
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
                     rs.getString("fd_number"), rs.getString("cname"),
@@ -128,10 +128,10 @@ class FixedDepositPanelImpl extends JPanel {
 
         custSearch.addActionListener(e -> {
             try {
-                List<Customer> res = CustomerService.getInstance().searchCustomers(custSearch.getText().trim());
+                List<Party> res = PartyService.getInstance().searchParties(custSearch.getText().trim());
                 if (!res.isEmpty()) {
-                    Customer c = res.get(0); cId[0] = c.getId();
-                    custInfo.setText("✓ " + c.getFullName() + " [" + c.getCustomerId() + "]");
+                    Party c = res.get(0); cId[0] = c.getId();
+                    custInfo.setText("✓ " + c.getDisplayName() + " [" + c.getPartyId() + "]");
                     custInfo.setForeground(Theme.ACCENT_GREEN);
                 } else custInfo.setText("❌ Not found");
             } catch (Exception ex) { Theme.showError(dlg, ex.getMessage()); }

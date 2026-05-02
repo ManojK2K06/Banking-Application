@@ -102,7 +102,7 @@ public class MainFrame extends JFrame {
 
         String[][] navItems = {
             {"Dashboard",    "📊", "Dashboard"},
-            {"Customers",    "👥", "Customers"},
+            {"Parties",      "🏢", "Parties"},
             {"Accounts",     "🏦", "Accounts"},
             {"Deposit",      "💰", "Deposit"},
             {"Withdrawal",   "💸", "Withdrawal"},
@@ -111,6 +111,8 @@ public class MainFrame extends JFrame {
             {"FixedDeposit", "📈", "Fixed Deposit"},
             {"Cards",        "💳", "Cards"},
             {"FX",           "🌐", "Forex / SWIFT"},
+            {"Interest",     "📐", "Interest Mgmt"},
+            {"GL",           "📒", "General Ledger"},
             {"AuditLog",     "📜", "Audit Log"},
             {"Users",        "🔒", "User Mgmt"},
             {"Settings",     "⚙️",  "Settings"},
@@ -127,6 +129,8 @@ public class MainFrame extends JFrame {
 
             // Permission-gated items
             if ("AuditLog".equals(key) && userLevel < 4) continue;
+            if ("GL".equals(key) && userLevel < 4) continue;
+            if ("Interest".equals(key) && userLevel < 4) continue;
             if ("Users".equals(key) && userLevel < 8) continue;
 
             JButton btn = createNavButton(icon + "  " + label, key);
@@ -194,7 +198,7 @@ public class MainFrame extends JFrame {
         contentPanel.setBackground(Theme.BG_DARK);
 
         contentPanel.add(new DashboardPanel(), "Dashboard");
-        contentPanel.add(new CustomerPanel(), "Customers");
+        contentPanel.add(new PartyPanel(), "Parties");
         contentPanel.add(new AccountPanel(), "Accounts");
         contentPanel.add(new DepositPanel(), "Deposit");
         contentPanel.add(new WithdrawalPanel(), "Withdrawal");
@@ -203,6 +207,8 @@ public class MainFrame extends JFrame {
         contentPanel.add(new FixedDepositPanel(), "FixedDeposit");
         contentPanel.add(new CardPanel(), "Cards");
         contentPanel.add(new ForexPanel(), "FX");
+        contentPanel.add(new InterestPanel(), "Interest");
+        contentPanel.add(new GeneralLedgerPanel(), "GL");
         contentPanel.add(new AuditLogPanel(), "AuditLog");
         contentPanel.add(new UserManagementPanel(), "Users");
         contentPanel.add(new SettingsPanel(), "Settings");

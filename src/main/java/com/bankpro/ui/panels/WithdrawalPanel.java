@@ -81,7 +81,7 @@ public class WithdrawalPanel extends JPanel {
                 customerLabel.setText("⚠️ Account is " + a.getStatus()); return;
             }
             currentAccountId = a.getId();
-            customerLabel.setText("✓ " + a.getCustomerName() + "  |  " + a.getAccountTypeLabel());
+            customerLabel.setText("✓ " + a.getPartyName() + "  |  " + a.getAccountTypeLabel());
             customerLabel.setForeground(Theme.ACCENT_GREEN);
             double avail = Math.max(0, a.getBalance() - a.getMinimumBalance() + a.getOverdraftLimit());
             balanceLabel.setText("Available: " + BankUtil.formatCurrency(avail)

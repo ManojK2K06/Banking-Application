@@ -1,54 +1,41 @@
-# BankPro — Banking Management System
+# BankPro — Banking Management System v2.0
 
 ## Default Login
-- Username: `admin`
-- Password: `Admin@1234`
+Username: `admin`   Password: `Admin@1234`
 
 ## Run
-**Windows:** Double-click `run.bat` or: `java -jar BankPro.jar`
-**Linux/Mac:** `./run.sh` or `java -jar BankPro.jar`
+Windows: double-click `run.bat`   |   Linux/Mac: `./run.sh`   |   Any: `java -jar BankPro.jar`
+Requires Java 17+
 
-**Requires:** Java 17+ (Java 21 recommended)
+## New in v2.0
+- **Parties** replaces Customers — supports Individual, Corporate, Partnership, Trust, Government
+- **Internal Accounts** — Cash Vault, Nostro, Clearing, Suspense linked to GL codes
+- **General Ledger** — full double-entry bookkeeping, Balance Sheet, P&L, Chart of Accounts
+- **Interest Engine** — 30-day cycle auto-processing, manager-configurable rules, per-account overrides
 
-## Features
-| Module | Description |
-|--------|-------------|
-| Dashboard | Live stats: AUM, customers, txn volume, pending loans |
-| Customers | Register, search (binary search), KYC, profile |
-| Accounts | Savings/Current/Salary/NRI — open, freeze, statement |
-| Deposit | Cash deposits with receipt |
-| Withdrawal | Cash withdrawal with balance check |
-| Transfer | NEFT / RTGS / IMPS between accounts |
-| Loans | Apply, approve, disburse, repay EMI + calculator |
-| Fixed Deposits | Create FD, premature break, maturity calculation |
-| Cards | Issue Debit/Credit/Prepaid (Visa/Mastercard/RuPay) |
-| Forex / SWIFT | Currency converter + international wire transfers |
-| Audit Log | Full audit trail of every action |
-| User Management | Create staff, assign permission levels 1–10 |
-| Settings | Change password, update currency rates |
+## Navigation
+| Page | Min Level | Description |
+|------|-----------|-------------|
+| Dashboard | 1 | Live AUM, parties, transactions, loans |
+| Parties | 2 | Individual & Corporate party management |
+| Accounts | 2 | Party + internal accounts, statements, interest history |
+| Deposit / Withdrawal | 1 | Cash operations with GL posting |
+| Transfer | 1 | NEFT / RTGS / IMPS |
+| Loans | 3 | Apply, approve, disburse, repay |
+| Fixed Deposits | 2 | Create, manage, premature break |
+| Cards | 3 | Issue Debit/Credit/Prepaid |
+| Forex / SWIFT | 5 | Currency converter + international wire |
+| Interest Mgmt | 4 | View/edit rules, process 30-day cycle, account override |
+| General Ledger | 4 | Balance sheet, P&L, journal entries, drill-down |
+| Audit Log | 4 | Complete action trail |
+| User Mgmt | 8 | Staff creation, permission management |
+| Settings | 1 | Password change, FX rate update (level 7+) |
 
 ## Permission Levels
-| Level | Role |
-|-------|------|
-| 1 | Junior Clerk |
-| 2 | Senior Clerk (can create customers/accounts) |
-| 3 | Teller (can process loans) |
-| 4 | Supervisor (large withdrawals, KYC) |
-| 5 | Asst Manager (approve/disburse loans, SWIFT) |
-| 6 | Branch Manager (close/freeze accounts) |
-| 7 | Regional Manager (update FX rates) |
-| 8 | Senior Manager (create users, reset passwords) |
-| 9 | Director (deactivate users) |
-| 10 | CTO / Admin (all permissions, change any level) |
-
-## Database
-SQLite (`bankpro.db`) — created automatically on first run.
-All transactions, audit logs, and customer data are persisted.
+1=Junior Clerk  2=Senior Clerk  3=Teller  4=Supervisor  5=Asst Manager
+6=Branch Manager  7=Regional Manager  8=Senior Manager  9=Director  10=CTO/Admin
 
 ## Architecture
-- **UI:** Java Swing (dark professional theme)
-- **DB:** SQLite via JDBC (embedded, zero-config)
-- **Security:** SHA-256 + salt (10,000 rounds), session management, role-based access
-- **Algorithms:** Binary search for customer lookup, Luhn card generation, EMI formula
-- **Audit:** Every action logged to `audit_log` table with user, timestamp, entity
-
+Java 21 + Swing | SQLite (embedded) | Double-entry General Ledger
+SHA-256+salt password hashing | Role-based access on every operation
+Full audit trail | Binary search on party lists | Luhn card numbers | EMI formula

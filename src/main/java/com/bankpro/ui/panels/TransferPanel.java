@@ -115,7 +115,7 @@ public class TransferPanel extends JPanel {
                 else if (!"ACTIVE".equals(a.getStatus())) { fromInfo.setText("⚠️ Source account " + a.getStatus()); fromId = -1; }
                 else {
                     fromId = a.getId();
-                    fromInfo.setText("✓ FROM: " + a.getCustomerName() + "  [" + a.getAccountTypeLabel() + "]  Bal: " + BankUtil.formatCurrency(a.getBalance()));
+                    fromInfo.setText("✓ FROM: " + a.getPartyName() + "  [" + a.getAccountTypeLabel() + "]  Bal: " + BankUtil.formatCurrency(a.getBalance()));
                     fromInfo.setForeground(Theme.ACCENT_GREEN);
                 }
             }
@@ -125,7 +125,7 @@ public class TransferPanel extends JPanel {
                 else if (!"ACTIVE".equals(b.getStatus())) { toInfo.setText("⚠️ Dest account " + b.getStatus()); toId = -1; }
                 else {
                     toId = b.getId();
-                    toInfo.setText("✓ TO: " + b.getCustomerName() + "  [" + b.getAccountTypeLabel() + "]");
+                    toInfo.setText("✓ TO: " + b.getPartyName() + "  [" + b.getAccountTypeLabel() + "]");
                     toInfo.setForeground(Theme.ACCENT_BLUE);
                 }
             }

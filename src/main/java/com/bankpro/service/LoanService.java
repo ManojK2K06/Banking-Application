@@ -19,7 +19,7 @@ public class LoanService {
         return instance;
     }
 
-    public Loan applyLoan(int customerId, int accountId, String loanType,
+    public Loan applyLoan(int partyId, int accountId, String loanType,
                            double amount, int tenureMonths, double interestRate,
                            String purpose, String collateral) throws Exception {
         if (!SessionManager.getInstance().hasPermission(3))
@@ -36,12 +36,12 @@ public class LoanService {
 
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                 "INSERT INTO loans (loan_id,customer_id,account_id,loan_type,principal_amount," +
+                 "INSERT INTO loans (loan_id,party_id,account_id,loan_type,principal_amount," +
                  "outstanding_amount,interest_rate,tenure_months,emi_amount,status,purpose,collateral) " +
                  "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")) {
             String loanId = BankUtil.generateLoanId();
             ps.setString(1, loanId);
-            ps.setInt(2, customerId);
+            ps.setInt(2, partyId);
             ps.setInt(3, accountId);
             ps.setString(4, loanType);
             ps.setDouble(5, amount);
@@ -58,7 +58,7 @@ public class LoanService {
             ResultSet rs = conn.createStatement().executeQuery("SELECT last_insert_rowid()");
             if (rs.next()) loan.setId(rs.getInt(1));
             loan.setLoanId(loanId);
-            loan.setCustomerId(customerId);
+            loan.setPartyId(partyId);
             loan.setAccountId(accountId);
             loan.setLoanType(loanType);
             loan.setPrincipalAmount(amount);
@@ -70,7 +70,7 @@ public class LoanService {
 
             audit.log("APPLY_LOAN", "LOAN", loanId, null, loanType,
                 String.format("Loan applied: %s %s for customer %d",
-                    loanType, BankUtil.formatCurrency(amount), customerId));
+                    loanType, BankUtil.formatCurrency(amount), partyId));
             return loan;
         }
     }
@@ -268,17 +268,17 @@ public class LoanService {
         }
     }
 
-    public List<Loan> getLoansByCustomer(int customerId) throws SQLException {
+    public List<Loan> getLoansByCustomer(int partyId) throws SQLException {
         List<Loan> list = new ArrayList<>();
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                 "SELECT l.*, c.first_name||' '||c.last_name AS cname, a.account_number, " +
+                 "SELECT l.*, COALESCE(COALESCE(c.first_name||' '||c.last_name,c.company_name),c.company_name)||' '||c.last_name AS pname, a.account_number, " +
                  "u.full_name AS approved_by_name FROM loans l " +
-                 "LEFT JOIN customers c ON l.customer_id=c.id " +
+                 "LEFT JOIN parties c ON l.party_id=c.id " +
                  "LEFT JOIN accounts a ON l.account_id=a.id " +
                  "LEFT JOIN users u ON l.approved_by=u.id " +
-                 "WHERE l.customer_id=? ORDER BY l.created_at DESC")) {
-            ps.setInt(1, customerId);
+                 "WHERE l.party_id=? ORDER BY l.created_at DESC")) {
+            ps.setInt(1, partyId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) list.add(mapLoan(rs));
         }
@@ -289,9 +289,9 @@ public class LoanService {
         List<Loan> list = new ArrayList<>();
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                 "SELECT l.*, c.first_name||' '||c.last_name AS cname, a.account_number, " +
+                 "SELECT l.*, COALESCE(COALESCE(c.first_name||' '||c.last_name,c.company_name),c.company_name)||' '||c.last_name AS pname, a.account_number, " +
                  "u.full_name AS approved_by_name FROM loans l " +
-                 "LEFT JOIN customers c ON l.customer_id=c.id " +
+                 "LEFT JOIN parties c ON l.party_id=c.id " +
                  "LEFT JOIN accounts a ON l.account_id=a.id " +
                  "LEFT JOIN users u ON l.approved_by=u.id " +
                  "ORDER BY l.created_at DESC")) {
@@ -305,9 +305,9 @@ public class LoanService {
         List<Loan> list = new ArrayList<>();
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                 "SELECT l.*, c.first_name||' '||c.last_name AS cname, a.account_number, " +
+                 "SELECT l.*, COALESCE(COALESCE(c.first_name||' '||c.last_name,c.company_name),c.company_name)||' '||c.last_name AS pname, a.account_number, " +
                  "u.full_name AS approved_by_name FROM loans l " +
-                 "LEFT JOIN customers c ON l.customer_id=c.id " +
+                 "LEFT JOIN parties c ON l.party_id=c.id " +
                  "LEFT JOIN accounts a ON l.account_id=a.id " +
                  "LEFT JOIN users u ON l.approved_by=u.id " +
                  "WHERE l.status='PENDING' ORDER BY l.created_at")) {
@@ -346,7 +346,7 @@ public class LoanService {
         Loan l = new Loan();
         l.setId(rs.getInt("id"));
         l.setLoanId(rs.getString("loan_id"));
-        l.setCustomerId(rs.getInt("customer_id"));
+        l.setPartyId(rs.getInt("party_id"));
         l.setAccountId(rs.getInt("account_id"));
         l.setLoanType(rs.getString("loan_type"));
         l.setPrincipalAmount(rs.getDouble("principal_amount"));
@@ -360,7 +360,7 @@ public class LoanService {
         l.setPenaltyCharges(rs.getDouble("penalty_charges"));
         l.setPurpose(rs.getString("purpose"));
         l.setCollateral(rs.getString("collateral"));
-        try { l.setCustomerName(rs.getString("cname")); } catch (SQLException ignored) {}
+        try { l.setPartyName(rs.getString("pname")); } catch (SQLException ignored) {}
         try { l.setAccountNumber(rs.getString("account_number")); } catch (SQLException ignored) {}
         try { l.setApprovedByName(rs.getString("approved_by_name")); } catch (SQLException ignored) {}
         String da = rs.getString("disbursed_at");

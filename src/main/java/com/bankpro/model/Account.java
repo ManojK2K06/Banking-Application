@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 public class Account {
     private int id;
     private String accountNumber;
-    private int customerId;
-    private String customerName;
+    private int partyId;
+    private String partyName;
+    private String glCode;
+    private String internalName;
+    private String accountCategory;
     private String accountType;
     private double balance;
     private String currency;
@@ -40,10 +43,18 @@ public class Account {
     public void setId(int id) { this.id = id; }
     public String getAccountNumber() { return accountNumber; }
     public void setAccountNumber(String accountNumber) { this.accountNumber = accountNumber; }
-    public int getCustomerId() { return customerId; }
-    public void setCustomerId(int customerId) { this.customerId = customerId; }
-    public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    public int getPartyId() { return partyId; }
+    public void setPartyId(int partyId) { this.partyId = partyId; }
+    public String getPartyName() { return partyName; }
+    public String getCustomerName() { return partyName; }
+    public void setCustomerName(String n) { this.partyName = n; }
+    public void setPartyName(String partyName) { this.partyName = partyName; }
+    public String getGlCode() { return glCode; }
+    public void setGlCode(String glCode) { this.glCode = glCode; }
+    public String getInternalName() { return internalName; }
+    public void setInternalName(String internalName) { this.internalName = internalName; }
+    public String getAccountCategory() { return accountCategory; }
+    public void setAccountCategory(String accountCategory) { this.accountCategory = accountCategory; }
     public String getAccountType() { return accountType; }
     public void setAccountType(String accountType) { this.accountType = accountType; }
     public double getBalance() { return balance; }

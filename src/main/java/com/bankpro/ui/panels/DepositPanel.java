@@ -88,7 +88,7 @@ public class DepositPanel extends JPanel {
                 balanceLabel.setText("");
                 return;
             }
-            customerLabel.setText("✓ Customer: " + a.getCustomerName() + "  |  " + a.getAccountTypeLabel());
+            customerLabel.setText("✓ Customer: " + a.getPartyName() + "  |  " + a.getAccountTypeLabel());
             customerLabel.setForeground(Theme.ACCENT_GREEN);
             balanceLabel.setText("Current Balance: " + BankUtil.formatCurrency(a.getBalance()));
             balanceLabel.setForeground(Theme.ACCENT_GOLD);
@@ -150,7 +150,7 @@ class WithdrawalPanelBase extends JPanel {
                 customerLabel.setText("⚠️ Account is " + a.getStatus()); return;
             }
             currentAccountId = a.getId();
-            customerLabel.setText("✓ " + a.getCustomerName() + "  |  " + a.getAccountTypeLabel());
+            customerLabel.setText("✓ " + a.getPartyName() + "  |  " + a.getAccountTypeLabel());
             customerLabel.setForeground(Theme.ACCENT_GREEN);
             balanceLabel.setText("Available Balance: " + BankUtil.formatCurrency(
                 Math.max(0, a.getBalance() - a.getMinimumBalance())));

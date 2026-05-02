@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 public class Loan {
     private int id;
     private String loanId;
-    private int customerId;
-    private String customerName;
+    private int partyId;
+    private String partyName;
     private int accountId;
     private String accountNumber;
     private String loanType;
@@ -59,10 +59,11 @@ public class Loan {
     public void setId(int id) { this.id = id; }
     public String getLoanId() { return loanId; }
     public void setLoanId(String loanId) { this.loanId = loanId; }
-    public int getCustomerId() { return customerId; }
-    public void setCustomerId(int customerId) { this.customerId = customerId; }
-    public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    public int getPartyId() { return partyId; }
+    public void setPartyId(int partyId) { this.partyId = partyId; }
+    public String getCustomerName() { return partyName; }
+    public String getPartyName() { return partyName; }
+    public void setPartyName(String partyName) { this.partyName = partyName; }
     public int getAccountId() { return accountId; }
     public void setAccountId(int accountId) { this.accountId = accountId; }
     public String getAccountNumber() { return accountNumber; }
