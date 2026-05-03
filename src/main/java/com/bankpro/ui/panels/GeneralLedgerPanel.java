@@ -14,6 +14,8 @@ import java.util.List;
 public class GeneralLedgerPanel extends JPanel {
 
     private JTabbedPane tabs;
+    private DefaultTableModel assetModel, liabModel, incomeModel, expenseModel;
+    private JLabel assetTotal, liabTotal, incomeTotal, expenseTotal, netProfitLabel;
 
     public GeneralLedgerPanel() {
         setBackground(Theme.BG_DARK);
@@ -54,17 +56,38 @@ public class GeneralLedgerPanel extends JPanel {
     // ── Balance Sheet Tab ─────────────────────────────────────────────────────
 
     private JPanel buildBalanceSheetTab() {
-        JPanel panel = new JPanel(new GridLayout(1,2,16,0));
-        panel.setBackground(Theme.BG_DARK);
-        panel.setBorder(new EmptyBorder(16,0,0,0));
-        panel.setName("BS");
+    JPanel panel = new JPanel(new GridLayout(1, 2, 16, 0));
+    panel.setBackground(Theme.BG_DARK);
+    panel.setBorder(new EmptyBorder(16, 0, 0, 0));
 
-        JPanel leftPane  = buildBSSide("ASSET");
-        JPanel rightPane = buildBSSide("LIABILITY_EQUITY");
-        panel.add(leftPane);
-        panel.add(rightPane);
-        return panel;
-    }
+    assetModel = new DefaultTableModel(new String[]{"Code","Account","Balance"}, 0) {
+        public boolean isCellEditable(int r, int c) { return false; }
+    };
+    liabModel = new DefaultTableModel(new String[]{"Code","Account","Balance"}, 0) {
+        public boolean isCellEditable(int r, int c) { return false; }
+    };
+
+    JTable assetTable = new JTable(assetModel); Theme.styleTable(assetTable);
+    assetTable.getColumnModel().getColumn(2).setCellRenderer(amountRenderer());
+    JTable liabTable = new JTable(liabModel); Theme.styleTable(liabTable);
+    liabTable.getColumnModel().getColumn(2).setCellRenderer(amountRenderer());
+
+    assetTotal = new JLabel("Total: —"); assetTotal.setFont(Theme.FONT_HEADING); assetTotal.setForeground(Theme.ACCENT_GOLD);
+    liabTotal  = new JLabel("Total: —"); liabTotal.setFont(Theme.FONT_HEADING);  liabTotal.setForeground(Theme.ACCENT_GOLD);
+
+    JPanel leftCard = Theme.card(); leftCard.setLayout(new BorderLayout(0,8));
+    leftCard.add(Theme.heading("📦  Assets"), BorderLayout.NORTH);
+    leftCard.add(Theme.styledScroll(assetTable), BorderLayout.CENTER);
+    leftCard.add(assetTotal, BorderLayout.SOUTH);
+
+    JPanel rightCard = Theme.card(); rightCard.setLayout(new BorderLayout(0,8));
+    rightCard.add(Theme.heading("📄  Liabilities & Equity"), BorderLayout.NORTH);
+    rightCard.add(Theme.styledScroll(liabTable), BorderLayout.CENTER);
+    rightCard.add(liabTotal, BorderLayout.SOUTH);
+
+    panel.add(leftCard); panel.add(rightCard);
+    return panel;
+}
 
     private JPanel buildBSSide(String side) {
         JPanel card = Theme.card();
@@ -90,14 +113,41 @@ public class GeneralLedgerPanel extends JPanel {
     }
 
     private JPanel buildPnLTab() {
-        JPanel panel = new JPanel(new GridLayout(1,2,16,0));
-        panel.setBackground(Theme.BG_DARK);
-        panel.setBorder(new EmptyBorder(16,0,0,0));
-        panel.setName("PL");
+    JPanel panel = new JPanel(new GridLayout(1, 2, 16, 0));
+    panel.setBackground(Theme.BG_DARK);
+    panel.setBorder(new EmptyBorder(16, 0, 0, 0));
 
-        panel.add(buildPLSide("INCOME"));
-        panel.add(buildPLSide("EXPENSE"));
-        return panel;
+    incomeModel = new DefaultTableModel(new String[]{"Code","Account","Balance"}, 0) {
+        public boolean isCellEditable(int r, int c) { return false; }
+    };
+    expenseModel = new DefaultTableModel(new String[]{"Code","Account","Balance"}, 0) {
+        public boolean isCellEditable(int r, int c) { return false; }
+    };
+
+    JTable incTable = new JTable(incomeModel); Theme.styleTable(incTable);
+    incTable.getColumnModel().getColumn(2).setCellRenderer(amountRenderer());
+    JTable expTable = new JTable(expenseModel); Theme.styleTable(expTable);
+    expTable.getColumnModel().getColumn(2).setCellRenderer(amountRenderer());
+
+    incomeTotal  = new JLabel("Total: —"); incomeTotal.setFont(Theme.FONT_HEADING); incomeTotal.setForeground(Theme.ACCENT_GREEN);
+    expenseTotal = new JLabel("Total: —"); expenseTotal.setFont(Theme.FONT_HEADING); expenseTotal.setForeground(Theme.ACCENT_RED);
+    netProfitLabel = new JLabel(""); netProfitLabel.setFont(Theme.FONT_HEADING); netProfitLabel.setForeground(Theme.ACCENT_GOLD);
+
+    JPanel incCard = Theme.card(); incCard.setLayout(new BorderLayout(0,8));
+    incCard.add(Theme.heading("💰  Income"), BorderLayout.NORTH);
+    incCard.add(Theme.styledScroll(incTable), BorderLayout.CENTER);
+    incCard.add(incomeTotal, BorderLayout.SOUTH);
+
+    JPanel expCard = Theme.card(); expCard.setLayout(new BorderLayout(0,8));
+    expCard.add(Theme.heading("💸  Expenses"), BorderLayout.NORTH);
+    expCard.add(Theme.styledScroll(expTable), BorderLayout.CENTER);
+    JPanel expBottom = new JPanel(new BorderLayout()); expBottom.setOpaque(false);
+    expBottom.add(expenseTotal, BorderLayout.WEST);
+    expBottom.add(netProfitLabel, BorderLayout.EAST);
+    expCard.add(expBottom, BorderLayout.SOUTH);
+
+    panel.add(incCard); panel.add(expCard);
+    return panel;
     }
 
     private JPanel buildPLSide(String side) {
@@ -269,58 +319,40 @@ public class GeneralLedgerPanel extends JPanel {
         }.execute();
     }
 
-    private void populateBS(Map<String,List<GeneralLedger>> bs) {
-        JPanel bsTab = (JPanel) tabs.getComponentAt(0);
-        Component[] sides = bsTab.getComponents();
-
-        double assetTotal = 0, liabEquityTotal = 0;
-
-        for (Component comp : sides) {
-            if (!(comp instanceof JPanel)) continue;
-            JPanel card = (JPanel) comp;
-            DefaultTableModel m = (DefaultTableModel) card.getClientProperty("model");
-            JLabel total = (JLabel) card.getClientProperty("total");
-            if (m == null || total == null) continue;
-            m.setRowCount(0);
-
-            boolean isAsset = "ASSET".equals(card.getName());
-            List<String> cats = isAsset ? List.of("ASSET") : List.of("LIABILITY","EQUITY");
-            double sum = 0;
-            for (String cat : cats) {
-                List<GeneralLedger> rows = bs.getOrDefault(cat, List.of());
-                for (GeneralLedger gl : rows) {
-                    m.addRow(new Object[]{gl.getGlCode(), gl.getGlName(), BankUtil.formatCurrency(gl.getBalance())});
-                    sum += gl.getBalance();
-                }
-            }
-            if (isAsset) assetTotal = sum; else liabEquityTotal = sum;
-            total.setText("Total: " + BankUtil.formatCurrency(sum));
+    private void populateBS(Map<String, List<GeneralLedger>> bs) {
+    assetModel.setRowCount(0);
+    liabModel.setRowCount(0);
+    double at = 0, lt = 0;
+    for (GeneralLedger gl : bs.getOrDefault("ASSET", List.of())) {
+        assetModel.addRow(new Object[]{gl.getGlCode(), gl.getGlName(), BankUtil.formatCurrency(gl.getBalance())});
+        at += gl.getBalance();
+    }
+    for (String cat : List.of("LIABILITY","EQUITY")) {
+        for (GeneralLedger gl : bs.getOrDefault(cat, List.of())) {
+            liabModel.addRow(new Object[]{gl.getGlCode(), gl.getGlName(), BankUtil.formatCurrency(gl.getBalance())});
+            lt += gl.getBalance();
         }
     }
+    assetTotal.setText("Total Assets: " + BankUtil.formatCurrency(at));
+    liabTotal.setText("Total Liabilities + Equity: " + BankUtil.formatCurrency(lt));
+    }
 
-    private void populatePL(Map<String,List<GeneralLedger>> pl, double netProfit) {
-        JPanel plTab = (JPanel) tabs.getComponentAt(1);
-        for (Component comp : plTab.getComponents()) {
-            if (!(comp instanceof JPanel)) continue;
-            JPanel card = (JPanel) comp;
-            DefaultTableModel m = (DefaultTableModel) card.getClientProperty("model");
-            JLabel total = (JLabel) card.getClientProperty("total");
-            JLabel net   = (JLabel) card.getClientProperty("net");
-            if (m == null || total == null) continue;
-            m.setRowCount(0);
-            String cat = card.getName();
-            List<GeneralLedger> rows = pl.getOrDefault(cat, List.of());
-            double sum = 0;
-            for (GeneralLedger gl : rows) {
-                m.addRow(new Object[]{gl.getGlCode(), gl.getGlName(), BankUtil.formatCurrency(gl.getBalance())});
-                sum += gl.getBalance();
-            }
-            total.setText("Total: " + BankUtil.formatCurrency(sum));
-            if (net != null) {
-                net.setText("Net Profit: " + BankUtil.formatCurrency(netProfit));
-                net.setForeground(netProfit >= 0 ? Theme.ACCENT_GREEN : Theme.ACCENT_RED);
-            }
-        }
+    private void populatePL(Map<String, List<GeneralLedger>> pl, double netProfit) {
+    incomeModel.setRowCount(0);
+    expenseModel.setRowCount(0);
+    double it = 0, et = 0;
+    for (GeneralLedger gl : pl.getOrDefault("INCOME", List.of())) {
+        incomeModel.addRow(new Object[]{gl.getGlCode(), gl.getGlName(), BankUtil.formatCurrency(gl.getBalance())});
+        it += gl.getBalance();
+    }
+    for (GeneralLedger gl : pl.getOrDefault("EXPENSE", List.of())) {
+        expenseModel.addRow(new Object[]{gl.getGlCode(), gl.getGlName(), BankUtil.formatCurrency(gl.getBalance())});
+        et += gl.getBalance();
+    }
+    incomeTotal.setText("Total Income: " + BankUtil.formatCurrency(it));
+    expenseTotal.setText("Total Expenses: " + BankUtil.formatCurrency(et));
+    netProfitLabel.setText("Net Profit: " + BankUtil.formatCurrency(netProfit));
+    netProfitLabel.setForeground(netProfit >= 0 ? Theme.ACCENT_GREEN : Theme.ACCENT_RED);
     }
 
     private void populateCOA(List<GeneralLedger> coa) {

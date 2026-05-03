@@ -54,7 +54,7 @@ public class MainFrame extends JFrame {
         bar.setPreferredSize(new Dimension(0, 56));
 
         // Left: logo
-        JLabel logo = new JLabel("🏛  BankPro");
+        JLabel logo = new JLabel("BankPro");
         logo.setFont(new Font("Segoe UI", Font.BOLD, 20));
         logo.setForeground(Theme.ACCENT_GOLD);
 
@@ -101,21 +101,21 @@ public class MainFrame extends JFrame {
         sidebar.setPreferredSize(new Dimension(220, 0));
 
         String[][] navItems = {
-            {"Dashboard",    "📊", "Dashboard"},
-            {"Parties",      "🏢", "Parties"},
-            {"Accounts",     "🏦", "Accounts"},
-            {"Deposit",      "💰", "Deposit"},
-            {"Withdrawal",   "💸", "Withdrawal"},
-            {"Transfer",     "🔄", "Transfer"},
-            {"Loans",        "📋", "Loans"},
-            {"FixedDeposit", "📈", "Fixed Deposit"},
-            {"Cards",        "💳", "Cards"},
-            {"FX",           "🌐", "Forex / SWIFT"},
-            {"Interest",     "📐", "Interest Mgmt"},
-            {"GL",           "📒", "General Ledger"},
-            {"AuditLog",     "📜", "Audit Log"},
-            {"Users",        "🔒", "User Mgmt"},
-            {"Settings",     "⚙️",  "Settings"},
+            {"Dashboard",    "", "Dashboard"},
+            {"Parties",      "", "Parties"},
+            {"Accounts",     "", "Accounts"},
+            {"Deposit",      "", "Deposit"},
+            {"Withdrawal",   "", "Withdrawal"},
+            {"Transfer",     "", "Transfer"},
+            {"Loans",        "", "Loans"},
+            {"FixedDeposit", "", "Fixed Deposit"},
+            {"Cards",        "", "Cards"},
+            {"FX",           "", "Forex / SWIFT"},
+            {"Interest",     "", "Interest Mgmt"},
+            {"GL",           "", "General Ledger"},
+            {"AuditLog",     "", "Audit Log"},
+            {"Users",        "", "User Mgmt"},
+            {"Settings",     "",  "Settings"},
         };
 
         sidebar.add(Box.createVerticalStrut(10));
