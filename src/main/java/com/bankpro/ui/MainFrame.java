@@ -18,8 +18,8 @@ public class MainFrame extends JFrame {
 
     // Panel keys
     private static final String[] PAGES = {
-        "Dashboard","Customers","Accounts","Deposit","Withdrawal",
-        "Transfer","Loans","FixedDeposit","Cards","FX","AuditLog","Users","Settings"
+            "Dashboard", "Customers", "Accounts", "Deposit", "Withdrawal",
+            "Transfer", "Loans", "FixedDeposit", "Cards", "FX", "AuditLog", "Users", "Settings"
     };
 
     public MainFrame() {
@@ -49,8 +49,8 @@ public class MainFrame extends JFrame {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setBackground(Theme.BG_CARD);
         bar.setBorder(new CompoundBorder(
-            new MatteBorder(0, 0, 1, 0, Theme.BORDER_COLOR),
-            new EmptyBorder(10, 20, 10, 20)));
+                new MatteBorder(0, 0, 1, 0, Theme.BORDER_COLOR),
+                new EmptyBorder(10, 20, 10, 20)));
         bar.setPreferredSize(new Dimension(0, 56));
 
         // Left: logo
@@ -101,21 +101,21 @@ public class MainFrame extends JFrame {
         sidebar.setPreferredSize(new Dimension(220, 0));
 
         String[][] navItems = {
-            {"Dashboard",    "", "Dashboard"},
-            {"Parties",      "", "Parties"},
-            {"Accounts",     "", "Accounts"},
-            {"Deposit",      "", "Deposit"},
-            {"Withdrawal",   "", "Withdrawal"},
-            {"Transfer",     "", "Transfer"},
-            {"Loans",        "", "Loans"},
-            {"FixedDeposit", "", "Fixed Deposit"},
-            {"Cards",        "", "Cards"},
-            {"FX",           "", "Forex / SWIFT"},
-            {"Interest",     "", "Interest Mgmt"},
-            {"GL",           "", "General Ledger"},
-            {"AuditLog",     "", "Audit Log"},
-            {"Users",        "", "User Mgmt"},
-            {"Settings",     "",  "Settings"},
+                { "Dashboard", "", "Dashboard" },
+                { "Parties", "", "Parties" },
+                { "Accounts", "", "Accounts" },
+                { "Deposit", "", "Deposit" },
+                { "Withdrawal", "", "Withdrawal" },
+                { "Transfer", "", "Transfer" },
+                { "Loans", "", "Loans" },
+                { "FixedDeposit", "", "Fixed Deposit" },
+                { "Cards", "", "Cards" },
+                { "FX", "", "Forex / SWIFT" },
+                { "Interest", "", "Interest Mgmt" },
+                { "GL", "", "General Ledger" },
+                { "AuditLog", "", "Audit Log" },
+                { "Users", "", "User Mgmt" },
+                { "Settings", "", "Settings" },
         };
 
         sidebar.add(Box.createVerticalStrut(10));
@@ -128,10 +128,14 @@ public class MainFrame extends JFrame {
             String label = item[2];
 
             // Permission-gated items
-            if ("AuditLog".equals(key) && userLevel < 4) continue;
-            if ("GL".equals(key) && userLevel < 4) continue;
-            if ("Interest".equals(key) && userLevel < 4) continue;
-            if ("Users".equals(key) && userLevel < 8) continue;
+            if ("AuditLog".equals(key) && userLevel < 4)
+                continue;
+            if ("GL".equals(key) && userLevel < 4)
+                continue;
+            if ("Interest".equals(key) && userLevel < 4)
+                continue;
+            if ("Users".equals(key) && userLevel < 8)
+                continue;
 
             JButton btn = createNavButton(icon + "  " + label, key);
             sidebar.add(btn);
@@ -144,8 +148,8 @@ public class MainFrame extends JFrame {
         sidebar.add(Box.createVerticalGlue());
 
         // Version info
-        JLabel ver = new JLabel("BankPro v1.0  •  Level " + userLevel,
-            SwingConstants.CENTER);
+        JLabel ver = new JLabel("BankPro v2.0  •  Level " + userLevel,
+                SwingConstants.CENTER);
         ver.setFont(Theme.FONT_SMALL);
         ver.setForeground(Theme.TEXT_MUTED);
         ver.setBorder(new EmptyBorder(8, 0, 12, 0));
@@ -170,10 +174,13 @@ public class MainFrame extends JFrame {
 
         btn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
-                if (btn != activeNavBtn) btn.setBackground(Theme.HOVER_BG);
+                if (btn != activeNavBtn)
+                    btn.setBackground(Theme.HOVER_BG);
             }
+
             public void mouseExited(MouseEvent e) {
-                if (btn != activeNavBtn) btn.setBackground(Theme.BG_SIDEBAR);
+                if (btn != activeNavBtn)
+                    btn.setBackground(Theme.BG_SIDEBAR);
             }
         });
 
@@ -219,7 +226,7 @@ public class MainFrame extends JFrame {
     private void startClock() {
         Timer t = new Timer(1000, e -> {
             clockLabel.setText(LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("dd MMM yyyy  HH:mm:ss")));
+                    .format(DateTimeFormatter.ofPattern("dd MMM yyyy  HH:mm:ss")));
         });
         t.start();
         t.getActionListeners()[0].actionPerformed(null);
