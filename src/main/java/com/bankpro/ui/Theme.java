@@ -16,7 +16,7 @@ public class Theme {
     public static final Color ACCENT_GREEN = new Color(16, 185, 129); // Emerald
     public static final Color ACCENT_RED = new Color(239, 68, 68); // Error red
     public static final Color ACCENT_ORANGE = new Color(249, 115, 22); // Warning
-    public static final Color TEXT_PRIMARY = new Color(15, 23, 42); // Black-ish
+    public static final Color TEXT_PRIMARY = new Color(254, 255, 245); // white-ish
     public static final Color TEXT_SECONDARY = new Color(148, 163, 184); // Muted text
     public static final Color TEXT_MUTED = new Color(100, 116, 139); // Very muted
     public static final Color BORDER_COLOR = new Color(51, 65, 85); // Border
